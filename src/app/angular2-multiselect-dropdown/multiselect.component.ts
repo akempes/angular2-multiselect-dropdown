@@ -24,12 +24,12 @@ const noop = () => {
 
 export class AngularMultiSelect implements OnInit, ControlValueAccessor {
 
-    @Input() 
+    @Input()
     data: Array<ListItem>;
-    
+
     @Input()
     settings:DropdownSettings;
-    
+
     @Output('onSelect')
     onSelect: EventEmitter<ListItem> = new EventEmitter<ListItem>();
 
@@ -92,7 +92,7 @@ export class AngularMultiSelect implements OnInit, ControlValueAccessor {
                 if(this.settings.disabled){
                     return false;
                 }
-        
+
                 this.setTimeout();
 
                 let found = this.isSelected(item);
@@ -103,13 +103,13 @@ export class AngularMultiSelect implements OnInit, ControlValueAccessor {
                         if(limit){
                             this.addSelected(item);
                             this.onSelect.emit(item);
-                        } 
+                        }
                     }
                     else{
                         this.addSelected(item);
                         this.onSelect.emit(item);
                     }
-                    
+
                 }
                 else{
                 this.removeSelected(item);
@@ -120,7 +120,7 @@ export class AngularMultiSelect implements OnInit, ControlValueAccessor {
                 }
                 if(this.data.length == this.selectedItems.length){
                     this.isSelectAll = true;
-                }    
+                }
     }
     private onTouchedCallback: () => void = noop;
     private onChangeCallback: (_: any) => void = noop;
@@ -129,7 +129,7 @@ export class AngularMultiSelect implements OnInit, ControlValueAccessor {
         if (value !== undefined && value !== null) {
             if(this.settings.singleSelection){
                 try{
-                    
+
                     if(value.length > 1){
                         this.selectedItems = [value[0]];
                         throw new MyException(404, { "msg": "Single Selection Mode, Selected Items cannot have more than one item." });
@@ -141,7 +141,7 @@ export class AngularMultiSelect implements OnInit, ControlValueAccessor {
                 catch(e){
                     console.error(e.body.msg);
                 }
-                
+
             }
             else{
                 if(this.settings.limitSelection){
@@ -194,7 +194,7 @@ export class AngularMultiSelect implements OnInit, ControlValueAccessor {
            if(clickedItem.id === item.id){
                this.selectedItems.splice(this.selectedItems.indexOf(item),1);
            }
-        });    
+        });
         this.onChangeCallback(this.selectedItems);
     }
     toggleDropdown(evt: any){
@@ -202,6 +202,9 @@ export class AngularMultiSelect implements OnInit, ControlValueAccessor {
             return false;
         }
         this.isActive = !this.isActive;
+        if (this.isActive) {
+          this.setTimeout();
+        }
         evt.preventDefault();
     }
     closeDropdown(){
@@ -220,7 +223,7 @@ export class AngularMultiSelect implements OnInit, ControlValueAccessor {
             this.isSelectAll = false;
             this.onChangeCallback(this.selectedItems);
             this.onDeSelectAll.emit(this.selectedItems);
-        }     
+        }
         this.setTimeout();
     }
 }
