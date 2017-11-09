@@ -59,6 +59,8 @@ export class AngularMultiSelect implements OnInit, ControlValueAccessor {
         disabled: false,
         searchPlaceholderText: 'Search'
     }
+    timeout;
+
     constructor(){
 
     }
@@ -72,11 +74,27 @@ export class AngularMultiSelect implements OnInit, ControlValueAccessor {
             }
         }
     }
+
+    clearTimeout() {
+        if (this.timeout) {
+            clearTimeout(this.timeout);
+        }
+    }
+
+    setTimeout() {
+        this.clearTimeout();
+        this.timeout = setTimeout(() => {
+            this.closeDropdown();
+        }, 1000 * 10);
+    }
+
     onItemClick(item: ListItem, index: number, evt: Event){
                 if(this.settings.disabled){
                     return false;
                 }
         
+                this.setTimeout();
+
                 let found = this.isSelected(item);
                 let limit = this.selectedItems.length < this.settings.limitSelection ? true : false;
 
@@ -203,6 +221,7 @@ export class AngularMultiSelect implements OnInit, ControlValueAccessor {
             this.onChangeCallback(this.selectedItems);
             this.onDeSelectAll.emit(this.selectedItems);
         }     
+        this.setTimeout();
     }
 }
 
